@@ -1,29 +1,29 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
+/**
+ * Computes a scroll offset that increases over time while active.
+ * The offset is consumed exclusively by the canvas compositor
+ * (drawTeleprompterOverlay in useCompositor) — there is intentionally
+ * no DOM overlay counterpart. Do NOT attach this offset to any DOM
+ * element or a second visible teleprompter will appear alongside the
+ * canvas-drawn one.
+ */
 export function useTeleprompter(script: string, speed: number, isActive: boolean) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
   const [offset, setOffset] = useState(0)
-  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
-    if (!isActive || paused || !script.trim()) return
+    if (!isActive || !script.trim()) return
 
     const id = window.setInterval(() => {
       setOffset((current) => current + speed)
     }, 16)
 
     return () => window.clearInterval(id)
-  }, [isActive, paused, script, speed])
+  }, [isActive, script, speed])
 
   useEffect(() => {
     setOffset(0)
   }, [script])
 
-  return {
-    containerRef,
-    offset,
-    paused,
-    setPaused,
-    togglePaused: () => setPaused((value) => !value),
-  }
+  return { offset }
 }

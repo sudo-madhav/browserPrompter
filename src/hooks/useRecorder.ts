@@ -1,5 +1,9 @@
 import { useCallback, useRef } from 'react'
-import { pickRecorderMimeType, recorderBitrateForResolution } from '../lib/mediaConstraints'
+import {
+  pickRecorderMimeType,
+  recorderBitrateForResolution,
+  type RecorderContentProfile,
+} from '../lib/mediaConstraints'
 
 const TIMESLICE_MS = 1000
 const MAX_DURATION_MS = 10 * 60 * 1000
@@ -24,6 +28,7 @@ export function useRecorder() {
       micStream: MediaStream | null,
       width: number,
       height: number,
+      contentProfile: RecorderContentProfile,
       onWarning: () => void,
     ) => {
       chunksRef.current = []
@@ -34,8 +39,12 @@ export function useRecorder() {
         ...(micStream?.getAudioTracks() ?? []),
       ])
 
-      const mimeType = pickRecorderMimeType()
-      const videoBitsPerSecond = recorderBitrateForResolution(width, height)
+      for (const track of combined.getVideoTracks()) {
+        track.contentHint = contentProfile === 'screen' ? 'detail' : 'motion'
+      }
+
+      const mimeType = pickRecorderMimeType(contentProfile)
+      const videoBitsPerSecond = recorderBitrateForResolution(width, height, contentProfile)
 
       const recorder = new MediaRecorder(combined, {
         mimeType,

@@ -1,4 +1,21 @@
+@import '@fontsource/geist-sans/400.css';
+@import '@fontsource/geist-sans/500.css';
+@import '@fontsource/geist-sans/600.css';
+@import '@fontsource/geist-mono/400.css';
 @import 'tailwindcss';
+
+:root {
+  --color-bg: #0a0a0b;
+  --color-surface: #141416;
+  --color-surface-raised: #1c1c1f;
+  --color-border: #27272a;
+  --color-border-strong: #3f3f46;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-accent-record: #ff453a;
+  --radius-sm: 6px;
+  --radius-frame: 8px;
+}
 
 html,
 body,
@@ -8,5 +25,45 @@ body,
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  font-family: 'Geist Sans', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.studio-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 240px 1fr 280px;
+  min-height: 0;
+}
+
+.studio-rail,
+.studio-script {
+  min-height: 0;
+}
+
+.studio-preview {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 1024px) {
+  .studio-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .studio-rail {
+    order: 2;
+  }
+
+  .studio-preview {
+    order: 1;
+  }
+
+  .studio-script {
+    order: 3;
+  }
 }

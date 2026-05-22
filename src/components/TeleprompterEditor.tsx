@@ -9,6 +9,12 @@ type TeleprompterEditorProps = {
   onFontSizeChange: (value: number) => void
 }
 
+const SAMPLE_SCRIPT = `Welcome to today's video.
+
+In this recording, I'll walk you through the key points step by step.
+
+Let's get started.`
+
 export function TeleprompterEditor({
   script,
   opacity,
@@ -20,19 +26,30 @@ export function TeleprompterEditor({
   onFontSizeChange,
 }: TeleprompterEditorProps) {
   return (
-    <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-      <label className="block text-sm font-medium text-zinc-300">
-        Teleprompter script
-        <textarea
-          value={script}
-          onChange={(event) => onScriptChange(event.target.value)}
-          rows={5}
-          placeholder="Paste your script here..."
-          className="mt-2 w-full resize-y rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-violet-500"
-        />
-      </label>
-      <div className="grid gap-3 sm:grid-cols-3">
-        <label className="text-xs text-zinc-400">
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
+          Script
+        </label>
+        {!script.trim() ? (
+          <button
+            type="button"
+            onClick={() => onScriptChange(SAMPLE_SCRIPT)}
+            className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+          >
+            Insert sample
+          </button>
+        ) : null}
+      </div>
+      <textarea
+        value={script}
+        onChange={(event) => onScriptChange(event.target.value)}
+        rows={8}
+        placeholder="Paste your script here…"
+        className="w-full resize-y rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] outline-none placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-border-strong)]"
+      />
+      <div className="grid gap-3">
+        <label className="text-[11px] text-[var(--color-text-muted)]">
           Opacity {opacity}%
           <input
             type="range"
@@ -40,10 +57,10 @@ export function TeleprompterEditor({
             max={100}
             value={opacity}
             onChange={(event) => onOpacityChange(Number(event.target.value))}
-            className="mt-1 w-full"
+            className="mt-1 w-full accent-[var(--color-accent-record)]"
           />
         </label>
-        <label className="text-xs text-zinc-400">
+        <label className="text-[11px] text-[var(--color-text-muted)]">
           Scroll speed {speed}
           <input
             type="range"
@@ -52,10 +69,10 @@ export function TeleprompterEditor({
             step={0.1}
             value={speed}
             onChange={(event) => onSpeedChange(Number(event.target.value))}
-            className="mt-1 w-full"
+            className="mt-1 w-full accent-[var(--color-accent-record)]"
           />
         </label>
-        <label className="text-xs text-zinc-400">
+        <label className="text-[11px] text-[var(--color-text-muted)]">
           Font size {fontSize}px
           <input
             type="range"
@@ -63,7 +80,7 @@ export function TeleprompterEditor({
             max={48}
             value={fontSize}
             onChange={(event) => onFontSizeChange(Number(event.target.value))}
-            className="mt-1 w-full"
+            className="mt-1 w-full accent-[var(--color-accent-record)]"
           />
         </label>
       </div>

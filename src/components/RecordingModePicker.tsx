@@ -6,24 +6,24 @@ type RecordingModePickerProps = {
 }
 
 const MODES: { id: RecordingMode; label: string; hint: string }[] = [
-  { id: 'composite', label: 'Screen + Cam', hint: 'PiP layout over screen capture' },
+  { id: 'composite', label: 'Studio view', hint: 'Record exactly what this preview shows' },
   { id: 'camera-only', label: 'Webcam only', hint: 'Native camera resolution, no re-encode' },
-  { id: 'screen-only', label: 'Screen only', hint: 'Screen capture at source resolution' },
+  { id: 'screen-only', label: 'Imported screen only', hint: 'External window without webcam PiP' },
 ]
 
 export function RecordingModePicker({ value, onChange }: RecordingModePickerProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-1">
       {MODES.map((mode) => (
         <button
           key={mode.id}
           type="button"
           title={mode.hint}
           onClick={() => onChange(mode.id)}
-          className={`rounded-lg px-3 py-1.5 text-sm transition ${
+          className={`rounded-[var(--radius-sm)] px-2.5 py-2 text-left text-xs transition ${
             value === mode.id
-              ? 'bg-violet-600 text-white'
-              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+              ? 'bg-[var(--color-surface-raised)] font-medium text-[var(--color-text)] ring-1 ring-[var(--color-border-strong)]'
+              : 'bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
           }`}
         >
           {mode.label}

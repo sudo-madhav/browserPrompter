@@ -11,8 +11,8 @@ export type RecordingAction =
   | { type: 'RESET' }
 
 const VALID_TRANSITIONS: Record<RecordingState['status'], RecordingAction['type'][]> = {
-  idle: ['START_RECORDING'],
-  recording: ['STOP_RECORDING'],
+  idle: ['START_RECORDING', 'RESET'],
+  recording: ['STOP_RECORDING', 'RESET'],
   stopping: ['RECORDING_READY', 'RESET'],
   ready: ['START_RECORDING', 'RESET'],
 }

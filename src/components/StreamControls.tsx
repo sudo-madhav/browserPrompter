@@ -12,38 +12,47 @@ type StreamControlsProps = {
   onStopMic: () => void
 }
 
-function StreamButton({
+function SourceRow({
+  label,
   active,
-  activeLabel,
-  inactiveLabel,
-  onStart,
-  onStop,
+  activeAction,
+  inactiveAction,
+  onClick,
   disabled,
-  resolution,
+  detail,
 }: {
+  label: string
   active: boolean
-  activeLabel: string
-  inactiveLabel: string
-  onStart: () => void
-  onStop: () => void
+  activeAction: string
+  inactiveAction: string
+  onClick: () => void
   disabled?: boolean
-  resolution: string | null
+  detail: string | null
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex items-center justify-between gap-2 rounded-[var(--radius-sm)] bg-[var(--color-surface)] px-2.5 py-2">
+      <div className="flex min-w-0 items-center gap-2">
+        <span
+          className={`h-2 w-2 shrink-0 rounded-full ${
+            active ? 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]' : 'bg-zinc-600'
+          }`}
+          aria-hidden
+        />
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-[var(--color-text)]">{label}</p>
+          {detail ? (
+            <p className="truncate font-mono text-[10px] text-[var(--color-text-muted)]">{detail}</p>
+          ) : null}
+        </div>
+      </div>
       <button
         type="button"
         disabled={disabled}
-        onClick={active ? onStop : onStart}
-        className={`rounded-lg px-3 py-1.5 text-sm font-medium transition disabled:opacity-40 ${
-          active
-            ? 'bg-emerald-900/60 text-emerald-200 ring-1 ring-emerald-700 hover:bg-emerald-900'
-            : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-        }`}
+        onClick={onClick}
+        className="shrink-0 rounded-[var(--radius-sm)] px-2 py-1 text-[11px] font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-text)] disabled:opacity-40"
       >
-        {active ? activeLabel : inactiveLabel}
+        {active ? activeAction : inactiveAction}
       </button>
-      {resolution ? <span className="text-xs text-zinc-500">{resolution}</span> : null}
     </div>
   )
 }
@@ -64,34 +73,35 @@ export function StreamControls({
   const locked = isRecording
 
   return (
-    <div className="flex flex-wrap items-start gap-3">
-      <StreamButton
+    <div className="flex flex-col gap-1.5">
+      <SourceRow
+        label="External window"
         active={hasScreen}
-        activeLabel="Stop screen share"
-        inactiveLabel="Share screen"
-        onStart={onStartScreen}
-        onStop={onStopScreen}
+        activeAction="Remove"
+        inactiveAction="Import"
+        onClick={hasScreen ? onStopScreen : onStartScreen}
         disabled={locked}
-        resolution={screenLabel}
+        detail={screenLabel}
       />
-      <StreamButton
+      <SourceRow
+        label="Webcam"
         active={hasCamera}
-        activeLabel="Stop webcam"
-        inactiveLabel="Start webcam"
-        onStart={onStartCamera}
-        onStop={onStopCamera}
+        activeAction="Stop"
+        inactiveAction="Start"
+        onClick={hasCamera ? onStopCamera : onStartCamera}
         disabled={locked}
-        resolution={cameraLabel}
+        detail={cameraLabel}
       />
       {hasMic ? (
-        <button
-          type="button"
-          disabled={locked}
+        <SourceRow
+          label="Microphone"
+          active={hasMic}
+          activeAction="Mute"
+          inactiveAction="On"
           onClick={onStopMic}
-          className="rounded-lg bg-zinc-800 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-700 disabled:opacity-40"
-        >
-          Mute mic
-        </button>
+          disabled={locked}
+          detail="Connected"
+        />
       ) : null}
     </div>
   )
