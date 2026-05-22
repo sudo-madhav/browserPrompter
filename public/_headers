@@ -1,0 +1,3 @@
+# https://www.cloudflare.com
+/dist/*
+  X-Frame-Options: DENY
